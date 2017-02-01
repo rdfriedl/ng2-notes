@@ -1,26 +1,25 @@
 <header>
-	<nav class="navbar navbar-inverse navbar-toggleable-sm bg-faded bg-inverse">
-		<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	<nav class="navbar navbar-toggleable-sm navbar-inverse bg-faded bg-inverse">
+		<!-- <button class="navbar-toggler" type="button">
 			<span class="navbar-toggler-icon"></span>
-		</button>
-		<a class="navbar-brand" routerLink="/">Ng2 Notes</a>
+		</button> -->
 
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav mr-auto">
-				<li class="nav-item">
-					<a class="nav-link" routerLink="/"><i class="fa fa-paperclip"></i> Notes</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" routerLink="/about"><i class="fa fa-info-circle"></i> About</a>
-				</li>
-				<li class="nav-item">
-					<button class="btn btn-success btn-outline-success nav-left ml-3" routerLink="/new" routerLinkActive="active"><i class="fa fa-plus"></i> New</button>
-				</li>
-			</ul>
-			<form class="form-inline my-2 my-lg-0">
-				<input class="form-control mr-sm-2" type="text" placeholder="Search">
-			</form>
-		</div>
+		<!-- desktop nav -->
+		<a class="navbar-brand" routerLink="/">Ng2 Notes</a>
+		<ul class="navbar-nav mr-auto hidden-sm-down">
+			<li class="nav-item">
+				<a class="nav-link" routerLink="/"><i class="fa fa-paperclip"></i> Notes</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" routerLink="/about"><i class="fa fa-info-circle"></i> About</a>
+			</li>
+			<li class="nav-item">
+				<button class="btn btn-success btn-outline-success nav-left ml-3" routerLink="/new" routerLinkActive="active"><i class="fa fa-plus"></i> New</button>
+			</li>
+		</ul>
+		<form class="form-inline my-2 my-lg-0 hidden-sm-down">
+			<input class="form-control mr-sm-2" type="text" placeholder="Search">
+		</form>
 	</nav>
 </header>
 <main>

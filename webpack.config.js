@@ -77,7 +77,7 @@ module.exports = function makeWebpackConfig() {
 		atlOptions = 'inlineSourceMap=true&sourceMap=false';
 	}
 
-	if(isProd){
+	if(!isTest && ! isTestWatch){
 		config.externals = {
 			"@angular/common": "ng.common",
 			"@angular/compiler": "ng.compiler",

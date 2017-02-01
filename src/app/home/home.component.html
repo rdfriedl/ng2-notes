@@ -1,3 +1,16 @@
 <div class="container">
-	<my-note *ngFor="let note of notes" [note]="note"></my-note>
+	<div class="card-columns">
+		<div class="card" *ngFor="let note of notes">
+			<div class="card-block">
+				<h4 class="card-title">{{note.title}}</h4>
+				<p class="card-text">{{note.content}}</p>
+			</div>
+		</div>
+
+		<div class="card card-inverse card-success" routerLink="/new">
+			<div class="card-block">
+				<i class="fa fa-plus"></i> New Note
+			</div>
+		</div>
+	</div>
 </div>
