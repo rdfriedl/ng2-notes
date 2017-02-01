@@ -4,16 +4,24 @@ import Dexie from 'dexie';
 export interface NoteData {
 	id: number;
 	title: String;
-	content: String;
+	content?: String;
+	items?: Array<NoteItem>;
+	type: String;
 	created: Date;
 	updated: Date;
 }
 export interface CreateNoteData {
 	id?: number;
 	title: String;
-	content: String;
+	content?: String;
+	items?: Array<NoteItem>;
+	type: String;
 	created?: Date;
 	updated?: Date;
+}
+export interface NoteItem {
+	content: String;
+	done: boolean;
 }
 
 @Injectable()
@@ -33,20 +41,21 @@ export class NoteService {
 		return this.db.table('notes').toArray().then(notes => notes.map((note: NoteData) => {
 			note.created = new Date(note.created);
 			note.updated = new Date(note.updated);
+			note.type = note.type || 'note';
 			return note;
 		}));
 	}
 
-	getNote(id: any): Dexie.Promise<NoteData> {
-		return this.db.table('notes').get(id.id || id).then((note: NoteData) => {
+	getNote(id: number): Dexie.Promise<NoteData> {
+		return this.db.table('notes').get(id).then((note: NoteData) => {
 			note.created = new Date(note.created);
 			note.updated = new Date(note.updated);
 			return note;
 		});
 	}
 
-	deleteNote(id: any) {
-		return this.db.table('notes').delete(id.id || id);
+	deleteNote(id: number) {
+		return this.db.table('notes').delete(id);
 	}
 
 	createNote(data: CreateNoteData) {

@@ -1,0 +1,59 @@
+<form class="pt-3" (ngSubmit)="createNote()" #noteForm="ngForm">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-sm-12">
+				<div class="form-group">
+					<input type="text" name="title" class="form-control" placeholder="Title" [(ngModel)]="note.title" autocomplete="off">
+				</div>
+				<!-- <div class="form-group">
+					<select name="type" class="form-control" [(ngModel)]="note.type" required>
+						<option value="note">Simple Note</option>
+						<option value="list">Check List</option>
+					</select>
+				</div> -->
+				<div class="form-group">
+					<textarea class="form-control" name="content" placeholder="Some relevant infomation" *ngIf="note.type == 'note'" [(ngModel)]="note.content" required style="height: 35vh;" autocomplete="off"></textarea>
+
+					<!-- checklist -->
+					<ul class="list-group" *ngIf="note.type == 'list'">
+						<li class="list-group-item" *ngFor="let item of note.items">
+							<textarea type="text" name="item" class="form-control" [(ngModel)]="item.content"></textarea>
+						</li>
+					</ul>
+					<button class="btn btn-success btn-block" type="button" *ngIf="note.type == 'list'" (click)="addItem()"><i class="fa fa-plus"></i> Add Item</button>
+				</div>
+			</div>
+			<div class="col-6 hidden-sm-down">
+				<div class="form-group">
+					<div class="card">
+						<div class="card-header">Preview</div>
+						<div class="card-block" *ngIf="note.type == 'note'">
+							<div class="card-text markdown" [innerHTML]="note.content | MarkdownToHtml"></div>
+						</div>
+
+						<!-- checklist -->
+						<ul class="list-group list-group-flush" *ngIf="note.type == 'list'">
+							<li class="list-group-item markdown" *ngFor="let item of note.items">
+
+								<div [innerHTML]="item.content | MarkdownToHtml"></div>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- desktop save buttons -->
+				<div class="form-group hidden-sm-down">
+					<button class="btn btn-secondary" routerLink="/notes">Cancel</button>
+					<button class="btn btn-success" type="submit" [disabled]="!noteForm.form.valid">Create</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row mb-3 px-3 hidden-md-up">
+		<div class="col-12">
+			<button class="btn btn-default pull-left" type="button" routerLink="/notes"><i class="fa fa-chevron-left"></i> Back</button>
+			<button class="btn btn-success pull-right" type="submit" [disabled]="!noteForm.form.valid"><i class="fa fa-plus"></i> Create</button>
+		</div>
+	</div>
+</form>
