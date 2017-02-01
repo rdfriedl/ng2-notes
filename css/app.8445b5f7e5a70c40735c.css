@@ -1,0 +1,10 @@
+.markdown img {
+  max-width: 100%; }
+
+.markdown > *:last-child {
+  margin-bottom: 0; }
+
+button {
+  cursor: pointer; }
+
+/*# sourceMappingURL=app.8445b5f7e5a70c40735c.css.map*/
