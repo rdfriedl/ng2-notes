@@ -1,0 +1,23 @@
+<div class="container">
+	<form (submit)="onFormSubmit($event)">
+		<div class="form-group">
+			<label>Titlte</label>
+			<input type="text" class="form-control" placeholder="A good title" required>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label>Note</label>
+				<textarea #content class="form-control" placeholder="Some relevant infomation" required style="height: 35vh;"></textarea>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			{{content.value}}
+		</div>
+		<div class="form-group">
+			<div class="btn-group" role="group" aria-label="Basic example">
+				<a class="btn btn-secondary" [routerLink]="['/']">Cancel</a>
+				<button type="submit" class="btn btn-success">Create</button>
+			</div>
+		</div>
+	</form>
+</div>

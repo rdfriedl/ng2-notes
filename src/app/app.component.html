@@ -1,17 +1,33 @@
 <header>
-  <nav>
-    <a [routerLink]="['']">Home</a>
-    <a [routerLink]="['about']">About</a>
-  </nav>
+	<nav class="navbar navbar-inverse navbar-toggleable-sm bg-faded bg-inverse">
+		<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<a class="navbar-brand" routerLink="/">Ng2 Notes</a>
+
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="nav-link" routerLink="/"><i class="fa fa-paperclip"></i> Notes</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" routerLink="/about"><i class="fa fa-info-circle"></i> About</a>
+				</li>
+				<li class="nav-item">
+					<button class="btn btn-success btn-outline-success nav-left ml-3" routerLink="/new" routerLinkActive="active"><i class="fa fa-plus"></i> New</button>
+				</li>
+			</ul>
+			<form class="form-inline my-2 my-lg-0">
+				<input class="form-control mr-sm-2" type="text" placeholder="Search">
+			</form>
+		</div>
+	</nav>
 </header>
 <main>
-  <h1>Hello from {{title}}!</h1>
-
-  <!-- Images (and assets) are parsed and loaded from within the public directory -->
-  <img src="/img/angular.png">
-
-  <router-outlet></router-outlet>
+	<router-outlet></router-outlet>
 </main>
-<footer>
-  <a [href]="url">Webpack Angular 2 Starter</a>
+<footer class="footer">
+	<div class="container">
+		<span class="text-muted">Created By <a href="http://www.rdfriedl.com" target="_blank">rdfriedl</a> using <i class="fa fa-github"></i> <a href="https://github.com/preboot/angular2-webpack" target="_blank">angular2-webpack</a></span>
+	</div>
 </footer>
