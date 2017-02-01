@@ -14,8 +14,6 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
  * Get npm lifecycle event to identify the environment
  */
 var ENV = process.env.npm_lifecycle_event;
-var isTestWatch = ENV === 'test-watch';
-var isTest = ENV === 'test' || isTestWatch;
 var isProd = ENV === 'build';
 
 module.exports = function makeWebpackConfig() {
@@ -34,9 +32,6 @@ module.exports = function makeWebpackConfig() {
 	if (isProd) {
 		config.devtool = 'source-map';
 	}
-	else if (isTest) {
-		config.devtool = 'inline-source-map';
-	}
 	else {
 		config.devtool = 'source-map';
 	}
@@ -45,7 +40,7 @@ module.exports = function makeWebpackConfig() {
 	 * Entry
 	 * Reference: http://webpack.github.io/docs/configuration.html#entry
 	 */
-	config.entry = isTest ? {} : {
+	config.entry = {
 		'polyfills': './src/polyfills.ts',
 		'vendor': './src/vendor.ts',
 		'app': './src/main.ts' // our angular app
@@ -55,7 +50,7 @@ module.exports = function makeWebpackConfig() {
 	 * Output
 	 * Reference: http://webpack.github.io/docs/configuration.html#output
 	 */
-	config.output = isTest ? {} : {
+	config.output = {
 		path: root('dist'),
 		publicPath: isProd ? './' : 'http://localhost:8080/',
 		filename: isProd ? 'js/[name].[hash].js' : 'js/[name].js',
@@ -71,30 +66,22 @@ module.exports = function makeWebpackConfig() {
 		extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html'],
 	};
 
-	var atlOptions = '';
-	if (isTest && !isTestWatch) {
-		// awesome-typescript-loader needs to output inlineSourceMap for code coverage to work with source maps.
-		atlOptions = 'inlineSourceMap=true&sourceMap=false';
-	}
-
-	if(!isTest && ! isTestWatch){
-		config.externals = {
-			"@angular/common": "ng.common",
-			"@angular/compiler": "ng.compiler",
-			"@angular/core": "ng.core",
-			"@angular/forms": "ng.forms",
-			"@angular/http": "ng.http",
-			"@angular/platform-browser": "ng.platformBrowser",
-			"@angular/platform-browser-dynamic": "ng.platformBrowserDynamic",
-			"@angular/router": "ng.router",
-			"bootstrap": "undefined",
-			"core-js": "undefined",
-			"dexie": "Dexie",
-			"jquery": "$",
-			"reflect-metadata": "undefined",
-			"rxjs": "Rx",
-			"tether": "Tether"
-		}
+	config.externals = {
+		"@angular/common": "ng.common",
+		"@angular/compiler": "ng.compiler",
+		"@angular/core": "ng.core",
+		"@angular/forms": "ng.forms",
+		"@angular/http": "ng.http",
+		"@angular/platform-browser": "ng.platformBrowser",
+		"@angular/platform-browser-dynamic": "ng.platformBrowserDynamic",
+		"@angular/router": "ng.router",
+		"bootstrap": "undefined",
+		"core-js": "undefined",
+		"dexie": "Dexie",
+		"jquery": "$",
+		"reflect-metadata": "undefined",
+		"rxjs": "Rx",
+		"tether": "Tether"
 	}
 
 	/**
@@ -108,8 +95,8 @@ module.exports = function makeWebpackConfig() {
 			// Support for .ts files.
 			{
 				test: /\.ts$/,
-				loaders: ['awesome-typescript-loader?' + atlOptions, 'angular2-template-loader', '@angularclass/hmr-loader'],
-				exclude: [isTest ? /\.(e2e)\.ts$/ : /\.(spec|e2e)\.ts$/, /node_modules\/(?!(ng2-.+))/]
+				loaders: ['awesome-typescript-loader', 'angular2-template-loader', '@angularclass/hmr-loader'],
+				exclude: [/\.(spec|e2e)\.ts$/, /node_modules\/(?!(ng2-.+))/]
 			},
 
 			// copy those assets to output
@@ -122,23 +109,21 @@ module.exports = function makeWebpackConfig() {
 			{test: /\.json$/, loader: 'json-loader'},
 
 			// Support for CSS as raw text
-			// use 'null' loader in test mode (https://github.com/webpack/null-loader)
 			// all css in src/style will be bundled in an external css file
 			{
 				test: /\.css$/,
 				exclude: root('src', 'app'),
-				loader: isTest ? 'null-loader' : ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css-loader', 'postcss-loader']})
+				loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css-loader', 'postcss-loader']})
 			},
 			// all css required in src/app files will be merged in js files
 			{test: /\.css$/, include: root('src', 'app'), loader: 'raw-loader!postcss-loader'},
 
 			// support for .scss files
-			// use 'null' loader in test mode (https://github.com/webpack/null-loader)
 			// all css in src/style will be bundled in an external css file
 			{
 				test: /\.(scss|sass)$/,
 				exclude: root('src', 'app'),
-				loader: isTest ? 'null-loader' : ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css-loader', 'postcss-loader', 'sass-loader']})
+				loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: ['css-loader', 'postcss-loader', 'sass-loader']})
 			},
 			// all css required in src/app files will be merged in js files
 			{test: /\.(scss|sass)$/, exclude: root('src', 'style'), loader: 'raw-loader!postcss-loader!sass-loader'},
@@ -149,25 +134,12 @@ module.exports = function makeWebpackConfig() {
 		]
 	};
 
-	if (isTest && !isTestWatch) {
-		// instrument only testing sources with Istanbul, covers ts files
-		config.module.rules.push({
-			test: /\.ts$/,
-			enforce: 'post',
-			include: path.resolve('src'),
-			loader: 'istanbul-instrumenter-loader',
-			exclude: [/\.spec\.ts$/, /\.e2e\.ts$/, /node_modules/]
-		});
-	}
-
-	if (!isTest || !isTestWatch) {
-		// tslint support
-		config.module.rules.push({
-			test: /\.ts$/,
-			enforce: 'pre',
-			loader: 'tslint-loader'
-		});
-	}
+	// tslint support
+	config.module.rules.push({
+		test: /\.ts$/,
+		enforce: 'pre',
+		loader: 'tslint-loader'
+	});
 
 	/**
 	 * Plugins
@@ -185,11 +157,11 @@ module.exports = function makeWebpackConfig() {
 		}),
 
 		// Workaround needed for angular 2 angular/angular#11580
-			new webpack.ContextReplacementPlugin(
-				// The (\\|\/) piece accounts for path separators in *nix and Windows
-				/angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
-				root('./src') // location of your src
-			),
+		new webpack.ContextReplacementPlugin(
+			// The (\\|\/) piece accounts for path separators in *nix and Windows
+			/angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
+			root('./src') // location of your src
+		),
 
 		// Tslint configuration for webpack 2
 		new webpack.LoaderOptionsPlugin({
@@ -224,28 +196,26 @@ module.exports = function makeWebpackConfig() {
 		})
 	];
 
-	if (!isTest && !isTestWatch) {
-		config.plugins.push(
-			// Generate common chunks if necessary
-			// Reference: https://webpack.github.io/docs/code-splitting.html
-			// Reference: https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
-			new CommonsChunkPlugin({
-				name: ['vendor', 'polyfills']
-			}),
+	config.plugins.push(
+		// Generate common chunks if necessary
+		// Reference: https://webpack.github.io/docs/code-splitting.html
+		// Reference: https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
+		new CommonsChunkPlugin({
+			name: ['vendor', 'polyfills']
+		}),
 
-			// Inject script and link tags into html files
-			// Reference: https://github.com/ampedandwired/html-webpack-plugin
-			new HtmlWebpackPlugin({
-				template: './src/public/index.html',
-				chunksSortMode: 'dependency'
-			}),
+		// Inject script and link tags into html files
+		// Reference: https://github.com/ampedandwired/html-webpack-plugin
+		new HtmlWebpackPlugin({
+			template: './src/public/index.html',
+			chunksSortMode: 'dependency'
+		}),
 
-			// Extract css files
-			// Reference: https://github.com/webpack/extract-text-webpack-plugin
-			// Disabled when in test mode or not in build mode
-			new ExtractTextPlugin({filename: 'css/[name].[hash].css', disable: !isProd})
-		);
-	}
+		// Extract css files
+		// Reference: https://github.com/webpack/extract-text-webpack-plugin
+		// Disabled when in test mode or not in build mode
+		new ExtractTextPlugin({filename: 'css/[name].[hash].css', disable: !isProd})
+	);
 
 	// Add build specific plugins
 	if (isProd) {
