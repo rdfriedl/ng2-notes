@@ -8,6 +8,7 @@ import { NoteService, CreateNoteData } from '../services';
 })
 export class NoteFormComponent {
 	loading = false;
+	mobilePreview = false;
 
 	note: CreateNoteData = {
 		title: '',
@@ -20,9 +21,9 @@ export class NoteFormComponent {
 
 	createNote() {
 		this.loading = true;
-		this.noteService.createNote(this.note).finally(() => this.loading = false).then(() => {
-			this.router.navigate(['']);
-		});
+		this.noteService.createNote(this.note)
+			.finally(() => this.loading = false)
+			.then(() => this.router.navigate(['/']));
 	}
 
 	addItem() {
@@ -34,5 +35,9 @@ export class NoteFormComponent {
 
 	removeItem(id: number) {
 		this.note.items.splice(id, 1);
+	}
+
+	toggleMobilePreview() {
+		this.mobilePreview = !this.mobilePreview;
 	}
 }

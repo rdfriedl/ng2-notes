@@ -1,23 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { NoteService, NoteData } from '../services';
+import { Component } from '@angular/core';
+import { NoteService } from '../services';
 
 @Component({
 	selector: 'my-home',
 	templateUrl: './home.component.html'
 })
-export class HomeComponent implements OnInit {
-	notes: Array<NoteData> = [];
+export class HomeComponent {
+	get notes() {
+		return this.noteService.notes;
+	};
 	selected: Array<number> = [];
 
 	constructor(public noteService: NoteService) {}
-
-	updateNotes() {
-		this.noteService.getNotes().then(notes => this.notes = notes);
-	}
-
-	ngOnInit() {
-		this.updateNotes();
-	}
 
 	setSelected(id: number, selected = true) {
 		if (selected) {
@@ -42,7 +36,6 @@ export class HomeComponent implements OnInit {
 
 	deleteNotes(ids: [number]) {
 		Promise.all(ids.map(id => this.noteService.deleteNote(id))).then(() => {
-			this.notes = this.notes.filter(note => !ids.includes(note.id));
 			this.selected = this.selected.filter(id => !ids.includes(id));
 		});
 	}

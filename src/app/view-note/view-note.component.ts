@@ -20,7 +20,7 @@ export class ViewNoteComponent implements OnInit {
 
 	ngOnInit() {
 		this.route.params
-			.switchMap((params: any) => this.noteService.getNote(+params['id']))
+			.map((params: any) => this.noteService.getNote(+params['id']))
 			.subscribe(note => this.note = note);
 	}
 }

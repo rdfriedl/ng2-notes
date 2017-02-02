@@ -1,9 +1,27 @@
+<!-- nav bar -->
+<nav class="card card-inverse rounded-0 flex-row p-2" style="background-color: #333; border-color: #333;">
+	<h3 class="navbar-brand p-0 m-0" routerLink="/notes">Ng2 Notes</h3>
+
+	<!-- mobile buttons -->
+	<div class="ml-auto hidden-sm-up">
+		<button class="btn btn-sm btn-outline-info hidden-sm-up p-1" routerLink="/about" routerLinkActive="active"><i class="fa fa-info fa-fw fa-2x"></i></button>
+		<button class="btn btn-sm btn-outline-success hidden-sm-up p-1" routerLink="/new" routerLinkActive="active"><i class="fa fa-plus fa-fw fa-2x"></i></button>
+	</div>
+
+	<!-- desktop buttons -->
+	<div class="ml-auto hidden-xs-down">
+		<button class="btn btn-outline-info" routerLink="/about" routerLinkActive="active"><i class="fa fa-info-circle"></i> About</button>
+		<button class="btn btn-outline-success" routerLink="/new" routerLinkActive="active"><i class="fa fa-plus"></i> New Note</button>
+	</div>
+</nav>
+
+<!-- selection toolbar -->
 <div class="card card-primary fixed-top flex-row rounded-0 p-2" [hidden]="selected.length == 0">
 	<button class="btn mr-auto" (click)="clearSelection()">{{selected.length}} Selected</button>
 
 	<div class="btn-group ml-auto">
 		<!-- <button class="btn btn-success" (click)="clearSelection()"><i class="fa fa-check"></i><span class="hidden-xs-down"> Done</span></button> -->
-		<button class="btn btn-info" *ngIf="selected.length == 1" [routerLink]="['edit',selected[0]]"><i class="fa fa-pencil"></i><span class="hidden-xs-down"> Edit</span></button>
+		<button class="btn btn-info" *ngIf="selected.length == 1" [routerLink]="['/edit',selected[0]]"><i class="fa fa-pencil"></i><span class="hidden-xs-down"> Edit</span></button>
 		<button class="btn btn-danger" (click)="deleteNotes(selected)"><i class="fa fa-trash"></i><span class="hidden-xs-down"> Delete</span></button>
 	</div>
 </div>
@@ -21,13 +39,10 @@
 				<li class="list-group-item markdown" *ngFor="let item of note.items" [innerHTML]="item.content | MarkdownToHtml"></li>
 			</ul>
 		</div>
-
-		<div class="card card-outline-success text-success mb-3 hidden-xs-down" routerLink="/new" *ngIf="notes.length == 0">
-			<div class="card-block">
-				<i class="fa fa-plus"></i> New Note
-			</div>
-		</div>
 	</div>
 
-	<button class="btn btn-success btn-block btn-lg hidden-sm-up" routerLink="/new" *ngIf="notes.length == 0"><i class="fa fa-plus"></i> New Note</button>
+	<div class="text-center" *ngIf="!notes.length">
+		<h3 class="text-muted">Looks like you dont have any notes</h3>
+		<button type="button" class="btn btn-success" routerLink="/new">Create One?</button>
+	</div>
 </div>

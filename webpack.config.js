@@ -108,6 +108,9 @@ module.exports = function makeWebpackConfig() {
 			// Support for *.json files.
 			{test: /\.json$/, loader: 'json-loader'},
 
+			// support for markdown files
+			{test: /\.md$/, use: ['html-loader','markdown-loader']},
+
 			// Support for CSS as raw text
 			// all css in src/style will be bundled in an external css file
 			{
