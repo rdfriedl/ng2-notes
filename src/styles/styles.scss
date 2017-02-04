@@ -8,6 +8,25 @@
 	}
 }
 
+main.page-content{
+	display: block;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+.page + *{
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
 button{
 	cursor: pointer;
+}
+
+@media (max-width: 960px) {
+	@media (min-width: 576px) {
+		.card-columns {
+			column-count: 2;
+		}
+	}
 }

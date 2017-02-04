@@ -8,7 +8,6 @@ import { MarkdownToHtmlPipe } from 'markdown-to-html-pipe';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { NoteFormComponent } from './note-form/note-form.component';
-import { ViewNoteComponent } from './view-note/view-note.component';
 import { EditNoteComponent } from './edit-note/edit-note.component';
 import { AboutComponent } from './about/about.component';
 import { NoteService } from './services';
@@ -27,7 +26,6 @@ import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 		AppComponent,
 		HomeComponent,
 		AboutComponent,
-		ViewNoteComponent,
 		NoteFormComponent,
 		EditNoteComponent,
 

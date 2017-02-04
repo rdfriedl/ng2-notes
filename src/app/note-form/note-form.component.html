@@ -1,29 +1,43 @@
-<!-- nav bar -->
-<nav class="card card-inverse rounded-0 flex-row p-2" style="background-color: #333; border-color: #333;">
-	<h3 class="navbar-brand p-0 m-0 mr-3 hidden-xs-down" routerLink="/notes">Ng2 Notes</h3>
+<header>
+	<!-- nav bar -->
+	<nav class="card card-inverse rounded-0 flex-row p-2" style="background-color: #333; border-color: #333;">
+		<h3 class="navbar-brand p-0 m-0 mr-3 hidden-xs-down" routerLink="/notes">Ng2 Notes</h3>
 
-	<!-- mobile buttons -->
-	<button class="btn btn-default mr-auto" type="button" routerLink="/notes"><i class="fa fa-chevron-left"></i> Back</button>
-	<button class="btn mx-auto hidden-sm-up" type="button" (click)="toggleMobilePreview()" [ngClass]="{'btn-primary': mobilePreview, 'btn-outline-primary': !mobilePreview}"><i class="fa fa-eye"></i> Preview</button>
+		<!-- mobile buttons -->
+		<button class="btn btn-default mr-auto" type="button" routerLink="/notes"><i class="fa fa-chevron-left"></i> Back</button>
+		<button class="btn mx-auto hidden-sm-up" type="button" (click)="toggleMobilePreview()" [ngClass]="{'btn-primary': mobilePreview, 'btn-outline-primary': !mobilePreview}"><i class="fa fa-eye"></i> Preview</button>
 
-	<!-- desktop buttons -->
-	<button class="btn btn-success ml-auto" type="submit" [disabled]="!noteForm.form.valid" form="new-note-form"><i class="fa fa-check"></i> <span>Save</span></button>
-</nav>
+		<!-- desktop buttons -->
+		<button class="btn btn-success ml-auto" type="submit" [disabled]="!noteForm.form.valid" form="new-note-form"><i class="fa fa-check"></i> <span>Save</span></button>
+	</nav>
+</header>
 
-<form id="new-note-form" class="pt-3" (ngSubmit)="createNote()" #noteForm="ngForm">
-	<div class="container">
-		<div class="row" *ngIf="!mobilePreview">
-			<div class="col-md-6 col-sm-12">
-				<div class="form-group">
-					<input type="text" name="title" class="form-control" placeholder="Title" [(ngModel)]="note.title" autocomplete="off">
+<main class="page-content">
+	<form id="new-note-form" class="pt-3" (ngSubmit)="createNote()" #noteForm="ngForm">
+		<div class="container">
+			<div class="row" *ngIf="!mobilePreview">
+				<div class="col-md-6 col-sm-12">
+					<div class="form-group">
+						<input type="text" name="title" class="form-control" placeholder="Title" [(ngModel)]="note.title" autocomplete="off">
+					</div>
+					<div class="form-group">
+						<textarea class="form-control" name="content" placeholder="Some relevant infomation" [(ngModel)]="note.content" required style="height: 35vh;" autocomplete="off"></textarea>
+					</div>
 				</div>
-				<div class="form-group">
-					<textarea class="form-control" name="content" placeholder="Some relevant infomation" [(ngModel)]="note.content" required style="height: 35vh;" autocomplete="off"></textarea>
+				<div class="col-6 hidden-sm-down">
+					<div class="form-group">
+						<label>Preview</label>
+						<div class="card">
+							<div class="card-header" *ngIf="note.title">{{note.title}}</div>
+							<div class="card-block">
+								<div class="card-text markdown" [innerHTML]="note.content | MarkdownToHtml"></div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="col-6 hidden-sm-down">
-				<div class="form-group">
-					<label>Preview</label>
+			<div class="row" *ngIf="mobilePreview">
+				<div class="col-12">
 					<div class="card">
 						<div class="card-header" *ngIf="note.title">{{note.title}}</div>
 						<div class="card-block">
@@ -33,15 +47,5 @@
 				</div>
 			</div>
 		</div>
-		<div class="row" *ngIf="mobilePreview">
-			<div class="col-12">
-				<div class="card">
-					<div class="card-header" *ngIf="note.title">{{note.title}}</div>
-					<div class="card-block">
-						<div class="card-text markdown" [innerHTML]="note.content | MarkdownToHtml"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</form>
+	</form>
+</main>

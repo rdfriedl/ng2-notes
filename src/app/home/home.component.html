@@ -1,43 +1,47 @@
-<!-- nav bar -->
-<nav class="card card-inverse rounded-0 flex-row p-2" style="background-color: #333; border-color: #333;">
-	<h3 class="navbar-brand p-0 m-0" routerLink="/notes">Ng2 Notes</h3>
+<header>
+	<!-- nav bar -->
+	<nav class="card card-inverse rounded-0 flex-row p-2" style="background-color: #333; border-color: #333;">
+		<h3 class="navbar-brand p-0 m-0" routerLink="/notes">Ng2 Notes</h3>
 
-	<!-- mobile buttons -->
-	<div class="ml-auto hidden-sm-up">
-		<button class="btn btn-sm btn-outline-info hidden-sm-up p-1" routerLink="/about" routerLinkActive="active"><i class="fa fa-info fa-fw fa-2x"></i></button>
-		<button class="btn btn-sm btn-outline-success hidden-sm-up p-1" routerLink="/new" routerLinkActive="active"><i class="fa fa-plus fa-fw fa-2x"></i></button>
-	</div>
+		<!-- mobile buttons -->
+		<div class="ml-auto hidden-sm-up">
+			<button class="btn btn-sm btn-outline-info hidden-sm-up p-1" routerLink="/about" routerLinkActive="active"><i class="fa fa-info fa-fw fa-2x"></i></button>
+			<button class="btn btn-sm btn-outline-success hidden-sm-up p-1" routerLink="/new" routerLinkActive="active"><i class="fa fa-plus fa-fw fa-2x"></i></button>
+		</div>
 
-	<!-- desktop buttons -->
-	<div class="ml-auto hidden-xs-down">
-		<button class="btn btn-outline-info" routerLink="/about" routerLinkActive="active"><i class="fa fa-info-circle"></i> About</button>
-		<button class="btn btn-outline-success" routerLink="/new" routerLinkActive="active"><i class="fa fa-plus"></i> New Note</button>
-	</div>
-</nav>
+		<!-- desktop buttons -->
+		<div class="ml-auto hidden-xs-down">
+			<button class="btn btn-outline-info" routerLink="/about" routerLinkActive="active"><i class="fa fa-info-circle"></i> About</button>
+			<button class="btn btn-outline-success" routerLink="/new" routerLinkActive="active"><i class="fa fa-plus"></i> New Note</button>
+		</div>
+	</nav>
 
-<!-- selection toolbar -->
-<div class="card card-primary fixed-top flex-row rounded-0 p-2" [hidden]="selected.length == 0">
-	<button class="btn mr-auto" (click)="clearSelection()">{{selected.length}} Selected</button>
+	<!-- selection toolbar -->
+	<div class="card card-primary fixed-top flex-row rounded-0 p-2" [hidden]="selected.length == 0">
+		<button class="btn mr-auto" (click)="clearSelection()">{{selected.length}} Selected</button>
 
-	<div class="btn-group ml-auto">
-		<!-- <button class="btn btn-success" (click)="clearSelection()"><i class="fa fa-check"></i><span class="hidden-xs-down"> Done</span></button> -->
-		<button class="btn btn-info" *ngIf="selected.length == 1" (click)="editNote(selected[0])"><i class="fa fa-pencil"></i><span class="hidden-xs-down"> Edit</span></button>
-		<button class="btn btn-danger" (click)="deleteNotes(selected)"><i class="fa fa-trash"></i><span class="hidden-xs-down"> Delete</span></button>
-	</div>
-</div>
-
-<div class="container p-3">
-	<div class="card-columns">
-		<div class="card mb-3" *ngFor="let note of notes" [ngClass]="{'card-outline-primary': selected.includes(note)}" (click)="toggleSelected(note)">
-			<div class="card-header" *ngIf="note.title">{{note.title}}</div>
-			<div class="card-block">
-				<div class="card-text markdown" [innerHTML]="note.content | MarkdownToHtml"></div>
-			</div>
+		<div class="btn-group ml-auto">
+			<!-- <button class="btn btn-success" (click)="clearSelection()"><i class="fa fa-check"></i><span class="hidden-xs-down"> Done</span></button> -->
+			<button class="btn btn-info" *ngIf="selected.length == 1" (click)="editNote(selected[0])"><i class="fa fa-pencil"></i><span class="hidden-xs-down"> Edit</span></button>
+			<button class="btn btn-danger" (click)="deleteNotes(selected)"><i class="fa fa-trash"></i><span class="hidden-xs-down"> Delete</span></button>
 		</div>
 	</div>
+</header>
 
-	<div class="text-center" *ngIf="!notes.length">
-		<h3 class="text-muted">Looks like you dont have any notes</h3>
-		<button type="button" class="btn btn-success" routerLink="/new">Create One?</button>
+<main class="page-content">
+	<div class="container p-3">
+		<div class="card-columns">
+			<div class="card mb-3" *ngFor="let note of notes" [ngClass]="{'card-outline-primary': selected.includes(note)}" (click)="toggleSelected(note)">
+				<div class="card-header" *ngIf="note.title">{{note.title}}</div>
+				<div class="card-block">
+					<div class="card-text markdown" [innerHTML]="note.content | MarkdownToHtml"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="text-center" *ngIf="!notes.length">
+			<h3 class="text-muted">Looks like you dont have any notes</h3>
+			<button type="button" class="btn btn-success" routerLink="/new">Create One?</button>
+		</div>
 	</div>
-</div>
+</main>
