@@ -4,7 +4,24 @@
 .markdown > *:last-child {
   margin-bottom: 0; }
 
+main.page-content {
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden; }
+
+.page + * {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  height: 100%; }
+
 button {
   cursor: pointer; }
+
+@media (max-width: 960px) and (min-width: 576px) {
+  .card-columns {
+    -moz-column-count: 2;
+         column-count: 2; } }
 
 /*# sourceMappingURL=app.css.map*/
