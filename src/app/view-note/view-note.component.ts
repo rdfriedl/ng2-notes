@@ -1,20 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NoteService, NoteData } from '../services';
+import { NoteService, Note } from '../services';
 
 @Component({
 	selector: 'my-view-note',
 	templateUrl: './view-note.component.html'
 })
 export class ViewNoteComponent implements OnInit {
-	note: NoteData = {
-		id: -1,
-		title: '',
-		content: '',
-		type: 'note',
-		created: new Date(),
-		updated: new Date()
-	};
+	note: Note = new Note();
 
 	constructor(public noteService: NoteService, public route: ActivatedRoute) {}
 

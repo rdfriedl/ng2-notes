@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { NoteService, CreateNoteData } from '../services';
+import { NoteService, Note } from '../services';
 
 @Component({
 	selector: 'my-note-form',
@@ -10,12 +10,7 @@ export class NoteFormComponent {
 	loading = false;
 	mobilePreview = false;
 
-	note: CreateNoteData = {
-		title: '',
-		content: '',
-		type: 'note',
-		items: []
-	};
+	note: Note = new Note();
 
 	constructor(public noteService: NoteService, public router: Router) {}
 
@@ -24,17 +19,6 @@ export class NoteFormComponent {
 		this.noteService.createNote(this.note)
 			.finally(() => this.loading = false)
 			.then(() => this.router.navigate(['/']));
-	}
-
-	addItem() {
-		this.note.items.push({
-			content: '',
-			done: false
-		});
-	}
-
-	removeItem(id: number) {
-		this.note.items.splice(id, 1);
 	}
 
 	toggleMobilePreview() {

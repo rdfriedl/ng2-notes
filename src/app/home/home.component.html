@@ -21,23 +21,18 @@
 
 	<div class="btn-group ml-auto">
 		<!-- <button class="btn btn-success" (click)="clearSelection()"><i class="fa fa-check"></i><span class="hidden-xs-down"> Done</span></button> -->
-		<button class="btn btn-info" *ngIf="selected.length == 1" [routerLink]="['/edit',selected[0]]"><i class="fa fa-pencil"></i><span class="hidden-xs-down"> Edit</span></button>
+		<button class="btn btn-info" *ngIf="selected.length == 1" (click)="editNote(selected[0])"><i class="fa fa-pencil"></i><span class="hidden-xs-down"> Edit</span></button>
 		<button class="btn btn-danger" (click)="deleteNotes(selected)"><i class="fa fa-trash"></i><span class="hidden-xs-down"> Delete</span></button>
 	</div>
 </div>
 
 <div class="container p-3">
 	<div class="card-columns">
-		<div class="card mb-3" *ngFor="let note of notes" [ngClass]="{'card-outline-primary': selected.includes(note.id)}" (click)="toggleSelected(note.id)">
+		<div class="card mb-3" *ngFor="let note of notes" [ngClass]="{'card-outline-primary': selected.includes(note)}" (click)="toggleSelected(note)">
 			<div class="card-header" *ngIf="note.title">{{note.title}}</div>
-			<div class="card-block" *ngIf="note.type == 'note'">
+			<div class="card-block">
 				<div class="card-text markdown" [innerHTML]="note.content | MarkdownToHtml"></div>
 			</div>
-
-			<!-- checklist -->
-			<ul class="list-group list-group-flush" *ngIf="note.type == 'list'">
-				<li class="list-group-item markdown" *ngFor="let item of note.items" [innerHTML]="item.content | MarkdownToHtml"></li>
-			</ul>
 		</div>
 	</div>
 

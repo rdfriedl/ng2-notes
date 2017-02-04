@@ -2,34 +2,18 @@ import { Injectable } from '@angular/core';
 import Dexie from 'dexie';
 
 export interface NoteData {
-	id: number;
-	title?: String;
-	content?: String;
-	items?: Array<NoteItem>;
-	type: String;
-	created: Date;
-	updated: Date;
-	done?: boolean;
-}
-export interface CreateNoteData {
 	id?: number;
 	title?: String;
 	content?: String;
-	items?: Array<NoteItem>;
-	type: String;
 	created?: Date;
 	updated?: Date;
 	done?: boolean;
-}
-export interface NoteItem {
-	content: String;
-	done: boolean;
 }
 
 @Injectable()
 export class NoteService {
 	public db: Dexie;
-	public notes: Array<NoteData> = [];
+	public notes: Map<number, Note> = new Map<number, Note>();
 
 	constructor() {
 		this.db = new Dexie('ng2-notes');
@@ -39,24 +23,21 @@ export class NoteService {
 			notes: '++id, title, content, created, updated'
 		});
 
-		this.getNotes().then(notes => {
-			if (!notes.length) {
+		this.loadNotes().then(notes => {
+			if (!notes.size) {
 				Promise.all([
-					this.createNote({
+					this.createNote(new Note({
 						content: 'Learn Angular2',
-						done: true,
-						type: 'note'
-					}),
-					this.createNote({
+						done: true
+					})),
+					this.createNote(new Note({
 						title: 'Create Demo Application',
 						content: `
  - Think of an application to build
- [ x ] set up project
- [ ] finish project
-`,
-						done: true,
-						type: 'note'
-					})
+ - set up project
+ - finish project`,
+						done: true
+					}))
 				]).then(() => {
 					console.log('demo notes created');
 				});
@@ -64,58 +45,91 @@ export class NoteService {
 		});
 	}
 
-	getNotes(): Dexie.Promise<Array<NoteData>> {
-		return this.db.table('notes').toArray().then(notes => notes.map((note: NoteData) => {
-			note.created = new Date(note.created);
-			note.updated = new Date(note.updated);
-			note.type = note.type || 'note';
-			return note;
-		})).then(notes => this.notes = notes);
+	loadNotes(): Dexie.Promise<Map<number, Note>> {
+		return this.db.table('notes').toArray().then(entries => {
+			entries.forEach(data => {
+				let note = new Note(<NoteData>data);
+				this.notes.set(data.id, note);
+			});
+
+			return this.notes;
+		});
 	}
 
-	getNote(id: number): NoteData {
-		return this.notes.find(note => note.id === id);
+	hasNote(id: number): boolean {
+		return this.notes.has(id);
+	}
+
+	getNote(id: number): Note {
+		return this.notes.get(id);
+	}
+
+	getNoteID(note: Note): number {
+		let entries = this.notes.entries(), entry;
+		while (entry = entries.next().value) {
+			if (entry[1] === note) {
+				return entry[0];
+			};
+		}
 	}
 
 	deleteNote(id: number) {
-		return this.db.table('notes').delete(id).then(() => {
-			// remote the note from the array
-			this.notes = this.notes.filter(note => note.id !== id);
-		});
+		if (this.hasNote(id)) {
+			// remote it from the db
+			return this.db.table('notes').delete(id).then(() => {
+				// remote it from the map
+				this.notes.delete(id);
+			});
+		}
+
+		return Dexie.Promise.reject(new Error('no note with that id'));
 	}
 
-	createNote(data: CreateNoteData) {
-		if (!data.created) {
-			data.created = new Date();
-		}
-		if (!data.updated) {
-			data.updated = new Date();
-		}
-		if (data.done === undefined) {
-			data.done = false;
-		}
+	createNote(data: NoteData) {
+		let note = new Note(data);
 
 		// add the note to the db and the array
-		return this.db.table('notes').put(data).then(id => {
-			data.id = id;
-			this.notes.push(<NoteData>data);
+		return this.db.table('notes').put(note).then(id => {
+			// add it to the map
+			this.notes.set(id, note);
+			return note;
 		});
 	}
 
-	updateNote(id: any, data: CreateNoteData) {
-		if (data.id) {
-			throw new Error('cant update notes id');
-		}
+	updateNote(id: any, data: NoteData) {
+		let note = this.getNote(id);
+		note.update(data);
 
+		// save the note
+		return this.db.table('notes').put(note);
+	}
+}
+
+export class Note implements NoteData {
+	title: String = '';
+	content: String = '';
+	done = false;
+	created: Date = new Date();
+	updated: Date = new Date();
+
+	constructor(data?: NoteData) {
+		if (data) {
+			this.update(data);
+		}
+	}
+
+	update(data: NoteData) {
 		if (!data.created) {
-			data.created = new Date();
+			this.created = new Date(data.created);
 		}
 		if (!data.updated) {
-			data.updated = new Date();
+			this.updated = new Date(data.updated);
+		}
+		if (data.done !== undefined) {
+			this.done = data.done;
 		}
 
-		return this.db.table('notes').put(Object.assign({}, data, {id})).then(() => {
-			Object.assign(this.getNote(id), data);
-		});
+		this.title = data.title || this.title;
+		this.content = data.content || this.content;
 	}
 }

@@ -1,42 +1,50 @@
 import { Component } from '@angular/core';
-import { NoteService } from '../services';
+import { Router } from '@angular/router';
+import { NoteService, Note } from '../services';
 
 @Component({
 	selector: 'my-home',
 	templateUrl: './home.component.html'
 })
 export class HomeComponent {
-	get notes() {
-		return this.noteService.notes;
+	get notes(): Array<Note> {
+		return Array.from(this.noteService.notes).map(v => v[1]);
 	};
-	selected: Array<number> = [];
+	selected: Array<Note> = [];
 
-	constructor(public noteService: NoteService) {}
+	constructor(public noteService: NoteService, public router: Router) {}
 
-	setSelected(id: number, selected = true) {
+	setSelected(note: Note, selected = true) {
 		if (selected) {
-			if (!this.selected.includes(id)) {
-				this.selected.push(id);
+			if (!this.selected.includes(note)) {
+				this.selected.push(note);
 			}
 		}
 		else {
-			if (this.selected.includes(id)) {
-				this.selected.splice(this.selected.indexOf(id), 1);
+			if (this.selected.includes(note)) {
+				this.selected.splice(this.selected.indexOf(note), 1);
 			}
 		}
 	}
 
-	toggleSelected(id: number) {
-		this.setSelected(id, !this.selected.includes(id));
+	toggleSelected(note: Note) {
+		this.setSelected(note, !this.selected.includes(note));
 	}
 
 	clearSelection() {
 		this.selected.length = 0;
 	}
 
-	deleteNotes(ids: [number]) {
-		Promise.all(ids.map(id => this.noteService.deleteNote(id))).then(() => {
-			this.selected = this.selected.filter(id => !ids.includes(id));
+	deleteNotes(notes: [Note]) {
+		Promise.all(notes.map(note => this.noteService.deleteNote(this.noteService.getNoteID(note)))).then(() => {
+			this.selected = this.selected.filter(note => !notes.includes(note));
+		}).catch(() => {
+			// error
+			this.clearSelection();
 		});
+	}
+
+	editNote(note: Note) {
+		this.router.navigate(['/edit', this.noteService.getNoteID(note)]);
 	}
 }
