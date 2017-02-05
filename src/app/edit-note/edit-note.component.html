@@ -23,14 +23,19 @@
 					<div class="form-group">
 						<textarea class="form-control" name="content" placeholder="Some relevant infomation" [(ngModel)]="modal.content" required style="height: 35vh;" autocomplete="off"></textarea>
 					</div>
+					<div class="form-group d-flex flex-row">
+						<input type="file" accept="image/*;capture=camera" class="form-control" name="image" (change)="uploadEvent($event)">
+						<button class="btn btn-danger" type="button" *ngIf="modal.image" (click)="modal.image = ''">Remove</button>
+					</div>
 				</div>
 				<div class="col-6 hidden-sm-down">
 					<div class="form-group">
-						<label>Preview</label>
 						<div class="card">
-							<div class="card-header" *ngIf="modal.title">{{modal.title}}</div>
+							<img class="card-img-top" *ngIf="modal.image" [src]="modal.image" style="width: 100%; pointer-events: none;">
 							<div class="card-block">
+	 							<h4 class="card-title" *ngIf="modal.title">{{modal.title}}</h4>
 								<div class="card-text markdown" [innerHTML]="modal.content | MarkdownToHtml"></div>
+								<div class="card-text text-muted"><small>Note Preview</small></div>
 							</div>
 						</div>
 					</div>
@@ -39,9 +44,11 @@
 			<div class="row" *ngIf="mobilePreview">
 				<div class="col-12">
 					<div class="card">
-						<div class="card-header" *ngIf="modal.title">{{modal.title}}</div>
+						<img class="card-img-top" *ngIf="modal.image" [src]="modal.image" style="width: 100%; pointer-events: none;">
 						<div class="card-block">
+	 						<h4 class="card-title" *ngIf="modal.title">{{modal.title}}</h4>
 							<div class="card-text markdown" [innerHTML]="modal.content | MarkdownToHtml"></div>
+							<div class="card-text text-muted"><small>Note Preview</small></div>
 						</div>
 					</div>
 				</div>

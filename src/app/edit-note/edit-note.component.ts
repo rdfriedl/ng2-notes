@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NoteService, Note } from '../services';
+import { readFile } from '../../utils';
 
 @Component({
 	selector: 'my-edit-note',
@@ -27,11 +28,23 @@ export class EditNoteComponent implements OnInit {
 	}
 
 	saveNote() {
+		this.modal.updated = new Date();
 		this.noteService.updateNote(this.noteService.getNoteID(this.note), this.modal)
 			.then(() => this.router.navigate(['/']));
 	}
 
 	toggleMobilePreview() {
 		this.mobilePreview = !this.mobilePreview;
+	}
+
+	uploadEvent(event: Event) {
+		let target: HTMLInputElement = <HTMLInputElement>event.target;
+		if (target.files && target.files.length) {
+			this.uploadImage(target.files[0]);
+		}
+	}
+
+	uploadImage(file: Blob) {
+		readFile(file).then(url => this.modal.image = url);
 	}
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NoteService, Note } from '../services';
+import { readFile } from '../../utils';
 
 @Component({
 	selector: 'my-note-form',
@@ -10,18 +11,29 @@ export class NoteFormComponent {
 	loading = false;
 	mobilePreview = false;
 
-	note: Note = new Note();
+	modal: Note = new Note();
 
 	constructor(public noteService: NoteService, public router: Router) {}
 
 	createNote() {
 		this.loading = true;
-		this.noteService.createNote(this.note)
+		this.noteService.createNote(this.modal)
 			.finally(() => this.loading = false)
 			.then(() => this.router.navigate(['/']));
 	}
 
 	toggleMobilePreview() {
 		this.mobilePreview = !this.mobilePreview;
+	}
+
+	uploadEvent(event: Event) {
+		let target: HTMLInputElement = <HTMLInputElement>event.target;
+		if (target.files && target.files.length) {
+			this.uploadImage(target.files[0]);
+		}
+	}
+
+	uploadImage(file: Blob) {
+		readFile(file).then(url => this.modal.image = url);
 	}
 }

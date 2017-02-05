@@ -8,6 +8,7 @@ export interface NoteData {
 	created?: Date;
 	updated?: Date;
 	done?: boolean;
+	image?: String;
 }
 
 @Injectable()
@@ -21,6 +22,9 @@ export class NoteService {
 		// set up db
 		this.db.version(1).stores({
 			notes: '++id, title, content, created, updated'
+		});
+		this.db.version(2).stores({
+			notes: '++id, title, content, created, updated, image'
 		});
 
 		this.loadNotes().then(notes => {
@@ -111,6 +115,7 @@ export class Note implements NoteData {
 	done = false;
 	created: Date = new Date();
 	updated: Date = new Date();
+	image: String = '';
 
 	constructor(data?: NoteData) {
 		if (data) {
@@ -119,10 +124,10 @@ export class Note implements NoteData {
 	}
 
 	update(data: NoteData) {
-		if (!data.created) {
+		if (data.created) {
 			this.created = new Date(data.created);
 		}
-		if (!data.updated) {
+		if (data.updated) {
 			this.updated = new Date(data.updated);
 		}
 		if (data.done !== undefined) {
@@ -131,5 +136,6 @@ export class Note implements NoteData {
 
 		this.title = data.title || this.title;
 		this.content = data.content || this.content;
+		this.image = data.image || this.image;
 	}
 }

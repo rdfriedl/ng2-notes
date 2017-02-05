@@ -32,9 +32,14 @@
 	<div class="container p-3">
 		<div class="card-columns">
 			<div class="card mb-3" *ngFor="let note of notes" [ngClass]="{'card-outline-primary': selected.includes(note)}" (click)="toggleSelected(note)">
-				<div class="card-header" *ngIf="note.title">{{note.title}}</div>
+				<img class="card-img-top" *ngIf="note.image" [src]="note.image" style="width: 100%; pointer-events: none;">
 				<div class="card-block">
+	 				<h4 class="card-title" *ngIf="note.title">{{note.title}}</h4>
 					<div class="card-text markdown" [innerHTML]="note.content | MarkdownToHtml"></div>
+					<div class="card-text text-muted">
+						<small *ngIf="note.updated <= note.created">Created {{note.created.toDateString()}}</small>
+						<small *ngIf="note.updated > note.created">Updated {{note.updated.toDateString()}}</small>
+					</div>
 				</div>
 			</div>
 		</div>
