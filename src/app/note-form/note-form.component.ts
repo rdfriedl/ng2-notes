@@ -12,6 +12,12 @@ export class NoteFormComponent {
 	mobilePreview = false;
 
 	modal: Note = new Note();
+	get labels(): String{
+		return this.modal.labels.join(',');
+	}
+	set labels(v: String){
+		this.modal.labels = String(v).split(',');
+	}
 
 	constructor(public noteService: NoteService, public router: Router) {}
 

@@ -10,7 +10,14 @@ import { readFile } from '../../utils';
 export class EditNoteComponent implements OnInit {
 	note: Note = new Note();
 	modal: Note = new Note();
+
 	mobilePreview = false;
+	get labels(): String{
+		return this.modal.labels.join(',');
+	}
+	set labels(v: String){
+		this.modal.labels = String(v).split(',');
+	}
 
 	constructor(
 		public noteService: NoteService,
@@ -19,12 +26,14 @@ export class EditNoteComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
-		this.route.params
-			.map((params: any) => this.noteService.getNote(+params['id']))
-			.subscribe(note => {
-				this.note = note;
-				this.modal.update(note);
-			});
+		this.noteService.loaded.then(() => {
+			this.route.params
+				.map((params: any) => this.noteService.getNote(+params['id']))
+				.subscribe(note => {
+					this.note = note;
+					this.modal.update(note);
+				});
+		});
 	}
 
 	saveNote() {

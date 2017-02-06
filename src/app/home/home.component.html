@@ -36,6 +36,9 @@
 				<div class="card-block">
 	 				<h4 class="card-title" *ngIf="note.title">{{note.title}}</h4>
 					<div class="card-text markdown" [innerHTML]="note.content | MarkdownToHtml"></div>
+					<div class="d-flex flex-row my-1">
+						<span class="badge badge-default" style="margin: 0 2px" *ngFor="let label of note.labels">{{label}}</span>
+					</div>
 					<div class="card-text text-muted">
 						<small *ngIf="note.updated <= note.created">Created {{note.created.toDateString()}}</small>
 						<small *ngIf="note.updated > note.created">Updated {{note.updated.toDateString()}}</small>
@@ -44,7 +47,7 @@
 			</div>
 		</div>
 
-		<div class="text-center" *ngIf="!notes.length">
+		<div class="text-center" *ngIf="!notes.length && !loading">
 			<h3 class="text-muted">Looks like you dont have any notes</h3>
 			<button type="button" class="btn btn-success" routerLink="/new">Create One?</button>
 		</div>

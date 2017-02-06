@@ -7,14 +7,15 @@ export interface NoteData {
 	content?: String;
 	created?: Date;
 	updated?: Date;
-	done?: boolean;
 	image?: String;
+	labels?: Array<String>;
 }
 
 @Injectable()
 export class NoteService {
 	public db: Dexie;
 	public notes: Map<number, Note> = new Map<number, Note>();
+	public loaded: Promise<Map<number, Note>>;
 
 	constructor() {
 		this.db = new Dexie('ng2-notes');
@@ -26,37 +27,23 @@ export class NoteService {
 		this.db.version(2).stores({
 			notes: '++id, title, content, created, updated, image'
 		});
-
-		this.loadNotes().then(notes => {
-			if (!notes.size) {
-				Promise.all([
-					this.createNote(new Note({
-						content: 'Learn Angular2',
-						done: true
-					})),
-					this.createNote(new Note({
-						title: 'Create Demo Application',
-						content: `
- - Think of an application to build
- - set up project
- - finish project`,
-						done: true
-					}))
-				]).then(() => {
-					console.log('demo notes created');
-				});
-			}
+		this.db.version(3).stores({
+			notes: '++id, title, content, created, updated, image, labels'
 		});
+
+		this.loadNotes();
 	}
 
-	loadNotes(): Dexie.Promise<Map<number, Note>> {
-		return this.db.table('notes').toArray().then(entries => {
-			entries.forEach(data => {
-				let note = new Note(<NoteData>data);
-				this.notes.set(data.id, note);
-			});
+	loadNotes(): Promise<Map<number, Note>> {
+		return this.loaded = new Promise((resolve, reject) => {
+			this.db.table('notes').toArray().then(entries => {
+				entries.forEach(data => {
+					let note = new Note(<NoteData>data);
+					this.notes.set(data.id, note);
+				});
 
-			return this.notes;
+				resolve(this.notes);
+			}).catch(err => reject(err));
 		});
 	}
 
@@ -112,10 +99,10 @@ export class NoteService {
 export class Note implements NoteData {
 	title: String = '';
 	content: String = '';
-	done = false;
 	created: Date = new Date();
 	updated: Date = new Date();
 	image: String = '';
+	labels: Array<String> = [];
 
 	constructor(data?: NoteData) {
 		if (data) {
@@ -130,12 +117,10 @@ export class Note implements NoteData {
 		if (data.updated) {
 			this.updated = new Date(data.updated);
 		}
-		if (data.done !== undefined) {
-			this.done = data.done;
-		}
 
 		this.title = data.title || this.title;
 		this.content = data.content || this.content;
 		this.image = data.image || this.image;
+		this.labels = Array.isArray(data.labels) ? Array.from(data.labels) : this.labels;
 	}
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NoteService, Note } from '../services';
 
@@ -6,13 +6,34 @@ import { NoteService, Note } from '../services';
 	selector: 'my-home',
 	templateUrl: './home.component.html'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 	get notes(): Array<Note> {
 		return Array.from(this.noteService.notes).map(v => v[1]);
 	};
 	selected: Array<Note> = [];
+	loading = true;
 
 	constructor(public noteService: NoteService, public router: Router) {}
+
+	ngOnInit() {
+		this.noteService.loaded.then(notes => {
+			if (!notes.size) {
+				return Promise.all([
+					this.noteService.createNote(new Note({
+						title: 'ng2-notes todo list',
+						content: `
+- <strike>allow user to edit notes</strike>
+- <strike>add labels to notes</strike>
+- add search box
+- add note colors`,
+						labels: ['default', 'ng2-notes']
+					}))
+				]).then(() => {
+					console.log('demo notes created');
+				});
+			}
+		}).then(() => this.loading = false);
+	}
 
 	setSelected(note: Note, selected = true) {
 		if (selected) {
