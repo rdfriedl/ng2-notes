@@ -17,11 +17,24 @@
 		<div class="container">
 			<div class="row" *ngIf="!mobilePreview">
 				<div class="col-md-6 col-sm-12">
-					<div class="form-group">
+					<div class="form-group d-flex flex-row">
 						<input type="text" name="title" class="form-control" placeholder="Title" [(ngModel)]="modal.title" autocomplete="off">
+						<select class="form-control hidden-sm-down" name="type" [(ngModel)]="modal.type">
+							<option value="text">Simple Note</option>
+							<option value="list">List Note</option>}
+						</select>
 					</div>
-					<div class="form-group">
+					<div class="form-group hidden-md-up">
+						<select class="form-control col-sm-12 col-md-6" name="type" [(ngModel)]="modal.type">
+							<option value="text">Simple Note</option>
+							<option value="list">List Note</option>}
+						</select>
+					</div>
+					<div class="form-group" *ngIf="modal.type == 'text'">
 						<textarea class="form-control" name="content" placeholder="Some relevant infomation" [(ngModel)]="modal.content" style="height: 35vh;" autocomplete="off"></textarea>
+					</div>
+					<div class="form-group" *ngIf="modal.type == 'list'">
+						<my-list-editor [list]="modal.items"></my-list-editor>
 					</div>
 					<div class="form-group">
 						<input type="text" name="labels" class="form-control" placeholder="Labels" [(ngModel)]="labels" autocomplete="off">
@@ -33,32 +46,13 @@
 				</div>
 				<div class="col-6 hidden-sm-down">
 					<div class="form-group">
-						<div class="card">
-							<img class="card-img-top" *ngIf="modal.image" [src]="modal.image" style="width: 100%; pointer-events: none;">
-							<div class="card-block">
-	 							<h4 class="card-title" *ngIf="modal.title">{{modal.title}}</h4>
-								<div class="card-text markdown" [innerHTML]="modal.content | MarkdownToHtml"></div>
-								<div class="d-flex flex-row my-1">
-									<span class="badge badge-default" style="margin: 0 2px" *ngFor="let label of modal.labels">{{label}}</span>
-								</div>
-								<div class="card-text text-muted"><small>Note Preview</small></div>
-							</div>
-						</div>
+						<my-note [note]="modal"></my-note>
 					</div>
 				</div>
 			</div>
 			<div class="row" *ngIf="mobilePreview">
 				<div class="col-12">
-					<div class="card">
-						<img class="card-img-top" *ngIf="modal.image" [src]="modal.image" style="width: 100%; pointer-events: none;">
-						<div class="card-block">
-	 						<h4 class="card-title" *ngIf="modal.title">{{modal.title}}</h4>
-							<div class="d-flex flex-row my-1">
-								<span class="badge badge-default" style="margin: 0 2px" *ngFor="let label of modal.labels">{{label}}</span>
-							</div>
-							<div class="card-text markdown" [innerHTML]="modal.content | MarkdownToHtml"></div>
-						</div>
-					</div>
+					<my-note [note]="modal"></my-note>
 				</div>
 			</div>
 		</div>

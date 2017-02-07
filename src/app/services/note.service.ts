@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
 import Dexie from 'dexie';
 
+export interface NoteItem {
+	done: boolean;
+	text: String;
+}
+
 export interface NoteData {
 	id?: number;
+	type?: String;
 	title?: String;
 	content?: String;
+	items?: Array<NoteItem>;
 	created?: Date;
 	updated?: Date;
 	image?: String;
@@ -29,6 +36,9 @@ export class NoteService {
 		});
 		this.db.version(3).stores({
 			notes: '++id, title, content, created, updated, image, labels'
+		});
+		this.db.version(4).stores({
+			notes: '++id, title, type, content, items, created, updated, image, labels'
 		});
 
 		this.loadNotes();
@@ -87,18 +97,20 @@ export class NoteService {
 		});
 	}
 
-	updateNote(id: any, data: NoteData) {
+	updateNote(id: number, data: NoteData) {
 		let note = this.getNote(id);
 		note.update(data);
 
 		// save the note
-		return this.db.table('notes').put(note);
+		return this.db.table('notes').update(id, data);
 	}
 }
 
 export class Note implements NoteData {
+	type: String = 'text'; // text, list
 	title: String = '';
 	content: String = '';
+	items: Array<NoteItem> = [];
 	created: Date = new Date();
 	updated: Date = new Date();
 	image: String = '';
@@ -110,7 +122,7 @@ export class Note implements NoteData {
 		}
 	}
 
-	update(data: NoteData) {
+	update(data: NoteData | Note) {
 		if (data.created) {
 			this.created = new Date(data.created);
 		}
@@ -119,7 +131,9 @@ export class Note implements NoteData {
 		}
 
 		this.title = data.title || this.title;
+		this.type = data.type || this.type;
 		this.content = data.content || this.content;
+		this.items = Array.isArray(data.items) ? Array.from(data.items) : this.items;
 		this.image = data.image || this.image;
 		this.labels = Array.isArray(data.labels) ? Array.from(data.labels) : this.labels;
 	}

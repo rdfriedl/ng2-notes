@@ -4,6 +4,9 @@ import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
 import { MarkdownToHtmlPipe } from 'markdown-to-html-pipe';
+import { NoteComponent } from './note/note.component';
+import { ListEditorComponent } from './list-editor/list-editor.component';
+import { MarkdownFixPipe } from './markdown-fix.pipe';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -28,8 +31,11 @@ import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 		AboutComponent,
 		NoteFormComponent,
 		EditNoteComponent,
+		NoteComponent,
 
-		MarkdownToHtmlPipe
+		MarkdownToHtmlPipe,
+		MarkdownFixPipe,
+		ListEditorComponent
 	],
 	providers: [
 		NoteService

@@ -1,0 +1,30 @@
+<ul class="list-group">
+	<li class="list-group-item p-2" *ngFor="let item of list">
+		<!-- edit input -->
+		<div class="input-group input-group-sm" *ngIf="editing === item">
+			<input type="text" class="form-control" [(ngModel)]="item.text" autocomplete="off">
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-outline-success ml-auto p-1" aria-label="Close" (click)="editing = undefined">
+					<i class="fa fa-check fa-fw"></i>
+				</button>
+			</span>
+		</div>
+
+		<!-- actions -->
+		<span class="markdown" *ngIf="editing !== item" [innerHTML]="item.text | MarkdownToHtml"></span>
+		<div class="btn-group ml-auto" *ngIf="editing !== item">
+			<button type="button" class="btn btn-outline-info ml-auto p-1" aria-label="Close" (click)="editing = item">
+				<i class="fa fa-pencil fa-fw"></i>
+			</button>
+			<button type="button" class="btn btn-outline-danger ml-auto p-1" aria-label="Close" (click)="removeItem(item)">
+				<i class="fa fa-times fa-fw"></i>
+			</button>
+		</div>
+	</li>
+</ul>
+<form #newItemForm="ngForm" (ngSubmit)="submitForm()">
+	<div class="input-group">
+		<input class="form-control" type="text" name="new-item" [(ngModel)]="newItem" required autocomplete="off">
+		<button type="submit" class="btn btn-success" [disabled]="!newItemForm.form.valid"><i class="fa fa-plus"></i> <span class="hidden-sm-down">Add</span></button>
+	</div>
+</form>

@@ -1,0 +1,35 @@
+<div class="card mb-3" [ngClass]="{'card-outline-primary': selected}">
+	<img class="card-img-top" *ngIf="note.image" [src]="note.image" style="width: 100%; pointer-events: none;">
+
+	<div class="card-block" *ngIf="note.type == 'text' ? (note.title || note.content) : note.title" [ngClass]="{'pb-0': note.type == 'text'}">
+		<h4 class="card-title" *ngIf="note.title">{{note.title}}</h4>
+
+		<!-- text content -->
+		<div class="card-text markdown" *ngIf="note.type == 'text'" [innerHTML]="note.content | MarkdownToHtml | myMarkdownFix"></div>
+	</div>
+
+	<div class="list-group list-group-flush" *ngIf="note.type == 'list'">
+		<li *ngFor="let item of note.items" class="list-group-item p-2" [ngClass]="{'list-group-item-success': item.done, 'list-group-item-default': !item.done}">
+			<button type="button" class="btn btn-outline-success btn-sm mr-1 p-1" [ngClass]="{'active': item.done}" (click)="toggleItem(item); $event.stopPropagation()">
+				<i class="fa fa-check fa-fw"></i>
+			</button>
+
+			<span *ngIf="!item.done" class="markdown" [innerHTML]="item.text | MarkdownToHtml | myMarkdownFix"></span>
+			<span *ngIf="item.done" class="text-muted markdown" style="text-decoration: line-through" [innerHTML]="item.text | MarkdownToHtml | myMarkdownFix"></span>
+
+			<button type="button" class="btn btn-outline-danger btn-sm ml-auto p-1" (click)="removeItem(item); $event.stopPropagation()">
+				<i class="fa fa-times fa-fw"></i>
+			</button>
+		</li>
+	</div>
+
+	<div class="card-block">
+		<div class="d-flex flex-row my-1" *ngIf="note.labels.length">
+			<span class="badge badge-default" style="margin: 0 2px" *ngFor="let label of note.labels">{{label}}</span>
+		</div>
+		<div class="card-text text-muted">
+			<small *ngIf="note.updated <= note.created">Created {{note.created.toDateString()}}</small>
+			<small *ngIf="note.updated > note.created">Updated {{note.updated.toDateString()}}</small>
+		</div>
+	</div>
+</div>
