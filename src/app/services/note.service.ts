@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import Dexie from 'dexie';
 
 export interface NoteItem {
+	id?: number;
 	done: boolean;
 	text: String;
 }
@@ -136,5 +137,17 @@ export class Note implements NoteData {
 		this.items = Array.isArray(data.items) ? Array.from(data.items) : this.items;
 		this.image = data.image || this.image;
 		this.labels = Array.isArray(data.labels) ? Array.from(data.labels) : this.labels;
+
+		// ensure all the list items have ids
+		this.items.forEach(item => item.id = item.id || Math.round(Math.random() * 10000) + 1);
+	}
+
+	addItem(text: String, done = false): this {
+		this.items.push({
+			id: Math.round(Math.random() * 10000) + 1,
+			text: text,
+			done: done
+		});
+		return this;
 	}
 }

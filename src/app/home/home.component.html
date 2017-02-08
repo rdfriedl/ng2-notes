@@ -21,7 +21,6 @@
 		<button class="btn mr-auto" (click)="clearSelection()">{{selected.length}} Selected</button>
 
 		<div class="btn-group ml-auto">
-			<!-- <button class="btn btn-success" (click)="clearSelection()"><i class="fa fa-check"></i><span class="hidden-xs-down"> Done</span></button> -->
 			<button class="btn btn-info" *ngIf="selected.length == 1" (click)="editNote(selected[0])"><i class="fa fa-pencil"></i><span class="hidden-xs-down"> Edit</span></button>
 			<button class="btn btn-danger" (click)="deleteNotes(selected)"><i class="fa fa-trash"></i><span class="hidden-xs-down"> Delete</span></button>
 		</div>

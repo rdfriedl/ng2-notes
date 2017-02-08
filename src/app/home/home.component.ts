@@ -28,13 +28,11 @@ let STARTING_NOTES: Array<Note> = [
 	}),
 	new Note({
 		title: 'A Simple List',
-		type: 'list',
-		items: [
-			{text: 'A simple list entry', done: false},
-			{text: 'A completed entry', done: true},
-			{text: 'list entries support **markdown**', done: false}
-		]
-	}),
+		type: 'list'
+	})
+	.addItem('A simple list entry')
+	.addItem('A completed entry', true)
+	.addItem('list entries support **markdown**'),
 	new Note({
 		content: `<center><h4>Angular2</h4></center>
 <center>One framework.<br>Mobile & desktop</center>

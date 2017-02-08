@@ -1,14 +1,16 @@
-<ul class="list-group">
+<ul class="list-group" [sortablejs]="list">
 	<li class="list-group-item p-2" *ngFor="let item of list">
 		<!-- edit input -->
-		<div class="input-group input-group-sm" *ngIf="editing === item">
-			<input type="text" class="form-control" [(ngModel)]="item.text" autocomplete="off">
-			<span class="input-group-btn">
-				<button type="button" class="btn btn-outline-success ml-auto p-1" aria-label="Close" (click)="editing = undefined">
-					<i class="fa fa-check fa-fw"></i>
-				</button>
-			</span>
-		</div>
+		<form class="w-100" (ngSubmit)="editing = undefined">
+			<div class="input-group input-group-sm" *ngIf="editing === item">
+				<input type="text" class="form-control" name="text" [(ngModel)]="item.text" autocomplete="off">
+				<span class="input-group-btn">
+					<button type="submit" class="btn btn-outline-success ml-auto p-1" aria-label="Close">
+						<i class="fa fa-check fa-fw"></i>
+					</button>
+				</span>
+			</div>
+		</form>
 
 		<!-- actions -->
 		<span class="markdown" *ngIf="editing !== item" [innerHTML]="item.text | MarkdownToHtml"></span>

@@ -8,16 +8,16 @@
 		<div class="card-text markdown" *ngIf="note.type == 'text'" [innerHTML]="note.content | MarkdownToHtml | myMarkdownFix"></div>
 	</div>
 
-	<div class="list-group list-group-flush" *ngIf="note.type == 'list'">
+	<div class="list-group list-group-flush" *ngIf="note.type == 'list'" (click)="$event.stopPropagation()" [sortablejs]="note.items" [sortablejsOptions]="sortablejs">
 		<li *ngFor="let item of note.items" class="list-group-item p-2" [ngClass]="{'list-group-item-success': item.done, 'list-group-item-default': !item.done}">
-			<button type="button" class="btn btn-outline-success btn-sm mr-1 p-1" [ngClass]="{'active': item.done}" (click)="toggleItem(item); $event.stopPropagation()">
+			<button type="button" class="btn btn-outline-success btn-sm mr-1 p-1" [ngClass]="{'active': item.done}" (click)="toggleItem(item)">
 				<i class="fa fa-check fa-fw"></i>
 			</button>
 
 			<span *ngIf="!item.done" class="markdown" [innerHTML]="item.text | MarkdownToHtml | myMarkdownFix"></span>
 			<span *ngIf="item.done" class="text-muted markdown" style="text-decoration: line-through" [innerHTML]="item.text | MarkdownToHtml | myMarkdownFix"></span>
 
-			<button type="button" class="btn btn-outline-danger btn-sm ml-auto p-1" (click)="removeItem(item); $event.stopPropagation()">
+			<button type="button" class="btn btn-outline-danger btn-sm ml-auto p-1" (click)="removeItem(item)">
 				<i class="fa fa-times fa-fw"></i>
 			</button>
 		</li>
