@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NoteService, Note } from '../services';
 import { readFile } from '../../utils';
+import * as moment from 'moment';
 
 @Component({
 	selector: 'my-edit-note',
@@ -37,7 +38,7 @@ export class EditNoteComponent implements OnInit {
 	}
 
 	saveNote() {
-		this.modal.updated = new Date();
+		this.modal.updated = moment();
 		this.noteService.updateNote(this.noteService.getNoteID(this.note), this.modal)
 			.then(() => this.router.navigate(['/']));
 	}

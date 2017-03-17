@@ -126,4 +126,9 @@ export class HomeComponent implements OnInit {
 	saveNote(note: Note) {
 		this.noteService.updateNote(this.noteService.getNoteID(note), note);
 	}
+	touchNote(note: Note) {
+		if (this.selected.length > 0) {
+			this.toggleSelected(note);
+		}
+	}
 }

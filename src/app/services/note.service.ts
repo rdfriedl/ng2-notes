@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import Dexie from 'dexie';
+import * as moment from 'moment';
 
 export interface NoteItem {
 	id?: number;
@@ -13,8 +14,8 @@ export interface NoteData {
 	title?: String;
 	content?: String;
 	items?: Array<NoteItem>;
-	created?: Date;
-	updated?: Date;
+	created?: moment.Moment;
+	updated?: moment.Moment;
 	image?: String;
 	labels?: Array<String>;
 }
@@ -91,7 +92,7 @@ export class NoteService {
 		let note = new Note(data);
 
 		// add the note to the db and the array
-		return this.db.table('notes').put(note).then(id => {
+		return this.db.table('notes').put(note.toJSON()).then(id => {
 			// add it to the map
 			this.notes.set(id, note);
 			return note;
@@ -103,7 +104,7 @@ export class NoteService {
 		note.update(data);
 
 		// save the note
-		return this.db.table('notes').update(id, data);
+		return this.db.table('notes').update(id, note.toJSON());
 	}
 }
 
@@ -112,10 +113,10 @@ export class Note implements NoteData {
 	title: String = '';
 	content: String = '';
 	items: Array<NoteItem> = [];
-	created: Date = new Date();
-	updated: Date = new Date();
 	image: String = '';
 	labels: Array<String> = [];
+	created: moment.Moment = moment();
+	updated: moment.Moment = moment();
 
 	constructor(data?: NoteData) {
 		if (data) {
@@ -125,10 +126,10 @@ export class Note implements NoteData {
 
 	update(data: NoteData | Note) {
 		if (data.created) {
-			this.created = new Date(data.created);
+			this.created = moment(data.created);
 		}
 		if (data.updated) {
-			this.updated = new Date(data.updated);
+			this.updated = moment(data.updated);
 		}
 
 		this.title = data.title || this.title;
@@ -149,5 +150,18 @@ export class Note implements NoteData {
 			done: done
 		});
 		return this;
+	}
+
+	toJSON(json: any = {}): any {
+		json.type = this.type;
+		json.title = this.title;
+		json.content = this.content;
+		json.items = this.items;
+		json.image = this.image;
+		json.labels = this.labels;
+		json.created = this.created.toDate();
+		json.updated = this.updated.toDate();
+
+		return json;
 	}
 }

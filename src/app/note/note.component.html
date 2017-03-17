@@ -1,4 +1,8 @@
-<div class="card mb-3" [ngClass]="{'card-outline-primary': selected}">
+<div class="card m-0" [ngClass]="{'card-outline-primary': selected}" (touchstart)="startTouchSelect()" (touchend)="cancelTouchSelect()">
+	<button class="btn btn-primary btn-corner top left rounded-circle" [ngClass]="{active: selected}" (click)="select.emit(!this.selected)"><i class="fa fa-check"></i></button>
+	<button class="btn btn-success btn-corner top right rounded-circle" [ngClass]="{active: selected}" (click)="edit.emit()"><i class="fa fa-pencil"></i></button>
+	<!-- <button class="btn btn-danger btn-corner top right rounded-circle" [ngClass]="{active: selected}" (click)="remove.emit()"><i class="fa fa-times"></i></button> -->
+
 	<img class="card-img-top" *ngIf="note.image" [src]="note.image" style="width: 100%; pointer-events: none;">
 
 	<div class="card-block" *ngIf="note.type == 'text' ? (note.title || note.content) : note.title" [ngClass]="{'pb-0': note.type == 'text'}">
@@ -28,8 +32,8 @@
 			<span class="badge badge-default" style="margin: 0 2px" *ngFor="let label of note.labels">{{label}}</span>
 		</div>
 		<div class="card-text text-muted">
-			<small *ngIf="note.updated <= note.created">Created {{note.created.toDateString()}}</small>
-			<small *ngIf="note.updated > note.created">Updated {{note.updated.toDateString()}}</small>
+			<small *ngIf="note.updated <= note.created">Created {{note.created.fromNow()}}</small>
+			<small *ngIf="note.updated > note.created">Updated {{note.updated.fromNow()}}</small>
 		</div>
 	</div>
 </div>

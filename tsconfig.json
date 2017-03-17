@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "es5",
+    "lib": ["ES5", "ES6", "DOM", "DOM.Iterable", "ScriptHost", "ES2016.Array.Include"],
     "module": "commonjs",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

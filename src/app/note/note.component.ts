@@ -4,13 +4,19 @@ import { SortablejsOptions } from 'angular-sortablejs';
 
 @Component({
 	selector: 'my-note',
-	templateUrl: './note.component.html'
+	templateUrl: './note.component.html',
+	styleUrls: ['./note.component.css']
 })
 export class NoteComponent {
 	@Input() selected: false;
 	@Input() note: Note = new Note();
 
 	@Output() change = new EventEmitter();
+	@Output() select = new EventEmitter();
+	@Output() remove = new EventEmitter();
+	@Output() edit = new EventEmitter();
+
+	protected touchSelectTimeout: any;
 
 	sortablejs: SortablejsOptions = {
 		animation: 150,
@@ -27,5 +33,21 @@ export class NoteComponent {
 	toggleItem(item: NoteItem) {
 		item.done = !item.done;
 		this.change.emit();
+	}
+
+	startTouchSelect() {
+		if (!this.selected) {
+			this.touchSelectTimeout = setTimeout(() => {
+				if (!this.selected) {
+					this.select.emit();
+				}
+			}, 500);
+		}
+	}
+
+	cancelTouchSelect() {
+		if (this.touchSelectTimeout) {
+			this.touchSelectTimeout = clearTimeout(this.touchSelectTimeout);
+		}
 	}
 }

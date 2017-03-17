@@ -1,0 +1,28 @@
+.card:hover .btn-corner{
+	opacity: 0.3;
+}
+
+.btn-corner{
+	position: absolute;
+	width: 2em;
+	height: 2em;
+	padding: 0;
+	text-align: center;
+	opacity: 0;
+	transition: opacity 0.25s ease;
+}
+.btn-corner:hover, .btn-corner.active{
+	opacity: 1 !important;
+}
+.btn-corner.top{
+	top: -0.7em;
+}
+.btn-corner.left{
+	left: -0.7em;
+}
+.btn-corner.right{
+	right: -0.7em;
+}
+.btn-corner.bottom{
+	bottom: -0.7em;
+}
