@@ -10,6 +10,7 @@ import { SortablejsOptions } from 'angular-sortablejs';
 export class NoteComponent {
 	@Input() selected: false;
 	@Input() note: Note = new Note();
+	@Input() multipleSelected = false;
 
 	@Output() change = new EventEmitter();
 	@Output() select = new EventEmitter();
@@ -35,19 +36,26 @@ export class NoteComponent {
 		this.change.emit();
 	}
 
-	startTouchSelect() {
-		if (!this.selected) {
-			this.touchSelectTimeout = setTimeout(() => {
-				if (!this.selected) {
-					this.select.emit();
-				}
-			}, 500);
-		}
+	startSelectTimeout() {
+		this.touchSelectTimeout = setTimeout(() => {
+			if (!this.selected) {
+				this.select.emit();
+				this.clearSelectTimeout();
+			}
+		}, 500);
 	}
 
-	cancelTouchSelect() {
+	clearSelectTimeout() {
 		if (this.touchSelectTimeout) {
 			this.touchSelectTimeout = clearTimeout(this.touchSelectTimeout);
 		}
+	}
+
+	touchEnd() {
+		if (this.multipleSelected && this.touchSelectTimeout) {
+			this.select.emit();
+		}
+
+		this.clearSelectTimeout();
 	}
 }

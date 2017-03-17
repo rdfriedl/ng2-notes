@@ -31,7 +31,7 @@
 	<div class="container p-3">
 		<div class="card-columns" style="column-gap: 0;">
 			<div class="p-2" *ngFor="let note of notes">
-				<my-note [note]="note" [selected]="selected.includes(note)" (select)="toggleSelected(note)" (change)="saveNote(note)" (edit)="editNote(note)" (touchstart)="touchNote(note)"></my-note>
+				<my-note [note]="note" [selected]="selected.includes(note)" [multipleSelected]="!!selected.length" (select)="toggleSelected(note)" (change)="saveNote(note)" (edit)="editNote(note)"></my-note>
 			</div>
 		</div>
 

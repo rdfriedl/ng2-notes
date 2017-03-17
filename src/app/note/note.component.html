@@ -1,7 +1,9 @@
-<div class="card m-0" [ngClass]="{'card-outline-primary': selected}" (touchstart)="startTouchSelect()" (touchend)="cancelTouchSelect()">
-	<button class="btn btn-primary btn-corner top left rounded-circle" [ngClass]="{active: selected}" (click)="select.emit(!this.selected)"><i class="fa fa-check"></i></button>
-	<button class="btn btn-success btn-corner top right rounded-circle" [ngClass]="{active: selected}" (click)="edit.emit()"><i class="fa fa-pencil"></i></button>
-	<!-- <button class="btn btn-danger btn-corner top right rounded-circle" [ngClass]="{active: selected}" (click)="remove.emit()"><i class="fa fa-times"></i></button> -->
+<div class="card m-0" [ngClass]="{'card-outline-primary': selected}" (touchstart)="startSelectTimeout()" (touchmove)="clearSelectTimeout()" (touchend)="touchEnd()">
+	<div class="hidden-xs-down">
+		<button class="btn btn-primary btn-corner top left rounded-circle" [ngClass]="{active: selected}" (click)="select.emit(!this.selected)"><i class="fa fa-check"></i></button>
+		<button class="btn btn-success btn-corner top right rounded-circle" [ngClass]="{active: selected}" (click)="edit.emit()"><i class="fa fa-pencil"></i></button>
+		<!-- <button class="btn btn-danger btn-corner top right rounded-circle" [ngClass]="{active: selected}" (click)="remove.emit()"><i class="fa fa-times"></i></button> -->
+	</div>
 
 	<img class="card-img-top" *ngIf="note.image" [src]="note.image" style="width: 100%; pointer-events: none;">
 
@@ -12,7 +14,7 @@
 		<div class="card-text markdown" *ngIf="note.type == 'text'" [innerHTML]="note.content | MarkdownToHtml | myMarkdownFix"></div>
 	</div>
 
-	<div class="list-group list-group-flush" *ngIf="note.type == 'list'" (click)="$event.stopPropagation()" [sortablejs]="note.items" [sortablejsOptions]="sortablejs">
+	<div class="list-group list-group-flush" *ngIf="note.type == 'list'" (click)="$event.stopPropagation()" [sortablejs]="note.items" [sortablejsOptions]="sortablejs" (touchstart)="$event.stopPropagation()">
 		<li *ngFor="let item of note.items" class="list-group-item p-2" [ngClass]="{'list-group-item-success': item.done, 'list-group-item-default': !item.done}">
 			<button type="button" class="btn btn-outline-success btn-sm mr-1 p-1" [ngClass]="{'active': item.done}" (click)="toggleItem(item)">
 				<i class="fa fa-check fa-fw"></i>
