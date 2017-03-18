@@ -13,7 +13,7 @@
 </header>
 
 <main class="page-content">
-	<form id="new-note-form" class="pt-3" (ngSubmit)="createNote()" #noteForm="ngForm">
+	<form id="new-note-form" class="pt-3" (ngSubmit)="saveNote()" #noteForm="ngForm">
 		<div class="container">
 			<div class="row" *ngIf="!mobilePreview">
 				<div class="col-md-6 col-sm-12">
@@ -46,7 +46,7 @@
 				</div>
 				<div class="col-6 hidden-sm-down">
 					<div class="form-group">
-						<my-note [note]="modal"></my-note>
+						<my-note [note]="modal" [hasButtons]="false" [selectable]="false"></my-note>
 					</div>
 				</div>
 			</div>

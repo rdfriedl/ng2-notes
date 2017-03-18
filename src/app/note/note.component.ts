@@ -11,6 +11,8 @@ export class NoteComponent {
 	@Input() selected: false;
 	@Input() note: Note = new Note();
 	@Input() multipleSelected = false;
+	@Input() hasButtons = true;
+	@Input() selectable = true;
 
 	@Output() change = new EventEmitter();
 	@Output() select = new EventEmitter();
@@ -39,6 +41,10 @@ export class NoteComponent {
 	startSelectTimeout() {
 		this.touchSelectTimeout = setTimeout(() => {
 			if (!this.selected) {
+				// vibrate
+				navigator.vibrate(200);
+
+				// select the note
 				this.select.emit();
 				this.clearSelectTimeout();
 			}

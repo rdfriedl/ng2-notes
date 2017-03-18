@@ -1,7 +1,7 @@
 <div class="card m-0" [ngClass]="{'card-outline-primary': selected}" (touchstart)="startSelectTimeout()" (touchmove)="clearSelectTimeout()" (touchend)="touchEnd()">
-	<div class="hidden-xs-down">
-		<button class="btn btn-primary btn-corner top left rounded-circle" [ngClass]="{active: selected}" (click)="select.emit(!this.selected)"><i class="fa fa-check"></i></button>
-		<button class="btn btn-success btn-corner top right rounded-circle" [ngClass]="{active: selected}" (click)="edit.emit()"><i class="fa fa-pencil"></i></button>
+	<div class="hidden-xs-down" *ngIf="hasButtons">
+		<button class="btn btn-primary btn-corner top left rounded-circle" type="button" [ngClass]="{active: selected}" (click)="select.emit(!this.selected)"><i class="fa fa-check"></i></button>
+		<button class="btn btn-success btn-corner top right rounded-circle" type="button" [ngClass]="{active: selected}" (click)="edit.emit()"><i class="fa fa-pencil"></i></button>
 		<!-- <button class="btn btn-danger btn-corner top right rounded-circle" [ngClass]="{active: selected}" (click)="remove.emit()"><i class="fa fa-times"></i></button> -->
 	</div>
 
